@@ -1,7 +1,3 @@
-# Using h5py, read hdf5 file created in the 180E lab into python arrays
-import h5py
-import numpy as np
-
 '''
 The normal structure of an hdf5 file created by 180E lab data acquisition system is
 HDF5 File -->
@@ -10,19 +6,16 @@ HDF5 File -->
 |-> Group 'Controls' --> Group 'Positions' --> Group 'positions_setup_array'
 |-> Group 'Meta' --> Group 'Python' --> Group 'Files' --> Group 'Files' -->
       Datasets 'Data_Run_GUI.py', 'LeCroy_Scope.py', 'Motor_Control_2D.py'
-'''
 
-'''
-FUNCTION: readhdf5
-AUTHOR  : swjtang (modified) / Yuchen Qian (original)
-INPUT:
-        -path-
-        The path of the hdf5 file
-RETURN:
+FUNCTION:       readhdf5
+AUTHOR:         swjtang (modified) / Yuchen Qian (original)
+DATE:           05 Feb 2019
+DESCRIPTION:    Reads hdf5 file data created in the 180E lab into NumPy arrays.
+INPUTS:         path = The path of the hdf5 file
+RETURNS:
         -ch1, ch2, ch3, ch4-
          Numpy arrays
-         Data of each channel, usually in the dimension of
-         (time, positions, number of shots)
+         Data of each channel, usually in the dimension of (time, positions, # of shots)
         -pos-
          Numpy array
          Array of positions set up
@@ -33,6 +26,9 @@ RETURN:
          String
          Descriptions of each channel
 '''
+import h5py
+import numpy as np
+
 def readhdf5(path):
 
     # Open the hdf5 file
@@ -93,7 +89,7 @@ def readhdf5(path):
     else:
         ch1 = []
         ch1attr = ''
-        print('Channel1 is empty.')
+        print('Channel 1 is empty.')
 
     if 'Channel2' in list(scope.keys()):
         ch2 = np.array(scope['Channel2'])
@@ -105,8 +101,7 @@ def readhdf5(path):
     else:
         ch2 = []
         ch2attr = ''
-        print('Channel2 is empty.')
-
+        print('Channel 2 is empty.')
 
     if 'Channel3' in list(scope.keys()):
         ch3 = np.array(scope['Channel3'])
@@ -118,7 +113,7 @@ def readhdf5(path):
     else:
         ch3 = []
         ch3attr = ''
-        print('Channel3 is empty.')
+        print('Channel 3 is empty.')
 
     if 'Channel4' in list(scope.keys()):
         ch4 = np.array(scope['Channel4'])
@@ -130,7 +125,7 @@ def readhdf5(path):
     else:
         ch4 = []
         ch4attr = ''
-        print('Channel4 is empty.')
+        print('Channel 4 is empty.')
 
         
     # Descriptions attached to the dataset
@@ -154,14 +149,13 @@ def readhdf5(path):
         yy  = []
     
     
-    # Return the data in a data structure
+    # Returns the data in a data structure
     data_struct={'ch1': ch1, 'ch2': ch2, 'ch3': ch3, 'ch4': ch4, \
                 'pos': pos, 'time': time, 'attributes': attributes, \
                 'nx': nx, 'ny': ny, 'xx': xx, 'yy': yy}
     return(data_struct)
 
 #-------------- for testing ---------------------#
-
 if __name__ == '__main__':
     path = '/Users/TheOne/Desktop/180/1-18 1-40, wide range.hdf5'
     ch1, ch2, ch3, ch4, pos, time, attr = readhdf5(path)
